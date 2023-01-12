@@ -1,8 +1,17 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { sveltekit } from '@sveltejs/kit/vite'
+import { extractorSvelte } from '@unocss/core'
+import UnoCSS from 'unocss/vite'
 
-const config: UserConfig = {
-	plugins: [sveltekit()]
+/** @type {import('vite').UserConfig} */
+const config = {
+  plugins: [
+    UnoCSS({
+      extractors: [extractorSvelte],
+      mode: 'svelte-scoped',
+      /* options */
+    }),
+    sveltekit(),
+  ],
 };
 
 export default config;
