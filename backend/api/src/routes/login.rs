@@ -1,5 +1,5 @@
 use axum::Extension;
-use core::{creation::create_table, User, deletion::drop_table};
+use core::{creation::create_table, User, deletion::drop_table, clear::clear_table, Tasks};
 
 // #[derive(Deserialize, Serialize,Debug)]
 // pub struct User {
@@ -36,6 +36,6 @@ pub async fn login(
     Extension(db_connection): Extension<core::sea_orm::DatabaseConnection>,
 ) -> String {
     create_table(&db_connection, User::Entity).await;
-    drop_table(&db_connection, User::Entity).await;
+    create_table(&db_connection, Tasks::Entity).await;
     "Success".to_string()
 }
