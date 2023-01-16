@@ -1,5 +1,5 @@
 [package]
-name = "data"
+name = "core"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 dotenvy = "0.15.6"
+log = "0.4.17"
 sea-orm = { version = "0.10.6", features = ["sqlx-postgres", "runtime-tokio-rustls", "macros"] }
 tokio = { version = "1.24.1", features = ["macros", "rt-multi-thread"] }

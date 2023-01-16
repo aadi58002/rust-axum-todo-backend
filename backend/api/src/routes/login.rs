@@ -1,6 +1,5 @@
 use axum::Extension;
-
-use crate::middleware::message::Config;
+use core::{creation::create_table, User, deletion::drop_table};
 
 // #[derive(Deserialize, Serialize,Debug)]
 // pub struct User {
@@ -33,6 +32,10 @@ use crate::middleware::message::Config;
 //     (headers,body)
 // }
 
-pub async fn login(Extension(data): Extension<Config>) -> String {
-    data.message
+pub async fn login(
+    Extension(db_connection): Extension<core::sea_orm::DatabaseConnection>,
+) -> String {
+    create_table(&db_connection, User::Entity).await;
+    drop_table(&db_connection, User::Entity).await;
+    "Success".to_string()
 }

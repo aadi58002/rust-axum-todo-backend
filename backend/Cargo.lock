@@ -35,6 +35,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "api"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "core",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "arrayvec"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -141,14 +155,7 @@ dependencies = [
 name = "backend"
 version = "0.1.0"
 dependencies = [
- "axum",
- "data",
- "serde",
- "serde_json",
- "tokio",
- "tower-http",
- "tracing",
- "tracing-subscriber",
+ "api",
 ]
 
 [[package]]
@@ -311,6 +318,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "core"
+version = "0.1.0"
+dependencies = [
+ "dotenvy",
+ "log",
+ "sea-orm",
+ "tokio",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -411,15 +428,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "data"
-version = "0.1.0"
-dependencies = [
- "dotenvy",
- "sea-orm",
- "tokio",
 ]
 
 [[package]]
