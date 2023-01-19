@@ -1,4 +1,4 @@
-use crate::routes::{login::login, server_working::server_working, register::register, table::table, tasks::tasks};
+use crate::routes::{server_working::server_working, user::users, table::table, tasks::tasks};
 
 use common::axum::{routing::get, Extension, Router};
 use tower_http::cors::CorsLayer;
@@ -7,8 +7,7 @@ use tower_http::cors::CorsLayer;
 pub fn create_route(db_connection: common::sea_orm::DatabaseConnection) -> Router {
     Router::new()
         .route("/", get(server_working))
-        .route("/login", get(login))
-        .route("/register", get(register))
+        .route("/users", get(users))
         .route("/table", get(table))
         .route("/tasks", get(tasks))
         .layer(Extension(db_connection))
