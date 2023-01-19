@@ -1,10 +1,12 @@
-use sea_orm::entity::{*,prelude::*};
-use serde::{Deserialize, Serialize};
+use common::sea_orm;
+use common::sea_orm::entity::prelude::*;
+use common::serde::{Serialize, Deserialize};
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
 #[sea_orm(table_name = "Users")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment)]
+    #[serde(skip_serializing,skip_deserializing)]
     pub id: i32,
     #[sea_orm(unique)]
     pub username: String,
@@ -26,13 +28,13 @@ impl Related<super::Tasks::Entity> for Entity {
 
 impl ActiveModelBehavior for ActiveModel {}
 
-impl ActiveModel {
+impl Model {
     pub fn new(username: String, email: String, password: String) -> Self {
-        ActiveModel {
+        Self {
             id: Default::default(),
-            username: Set(username),
-            email: Set(email),
-            password: Set(password),
+            username,
+            email,
+            password,
         }
     }
 }

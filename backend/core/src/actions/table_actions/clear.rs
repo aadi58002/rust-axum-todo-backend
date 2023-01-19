@@ -1,7 +1,7 @@
-use sea_orm::{ConnectionTrait, DbErr, EntityTrait, ExecResult, Statement};
+use common::sea_orm::{ConnectionTrait, DbErr, EntityTrait, ExecResult, Statement};
 
 pub async fn clear_table<E: EntityTrait>(
-    db_connection: &sea_orm::DatabaseConnection,
+    db_connection: &common::sea_orm::DatabaseConnection,
     entity: E,
 ) -> Result<ExecResult, DbErr> {
     db_connection

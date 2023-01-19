@@ -1,6 +1,6 @@
-use axum::{http::HeaderMap, response::Response};
+use common::axum::{http::HeaderMap, response::Response};
 
-use super::bad_request::res_bad;
+use super::res_con::res_bad;
 
 pub fn header_extract(name: &str, header: &HeaderMap) -> Result<String, Response> {
     match header.get(name) {

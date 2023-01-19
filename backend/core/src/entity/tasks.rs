@@ -1,10 +1,12 @@
-use sea_orm::entity::prelude::*;
-use serde::{Serialize, Deserialize};
+use common::sea_orm as sea_orm;
+use common::sea_orm::entity::prelude::*;
+use common::serde::{Serialize, Deserialize};
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
+#[derive(Clone,Default, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
 #[sea_orm(table_name = "Tasks")]
 pub struct Model {
     #[sea_orm(primary_key,auto_increment)]
+    #[serde(skip_serializing,skip_deserializing)]
     pub id: i32,
     pub username: String,
     #[sea_orm(primary_key)]
@@ -13,12 +15,13 @@ pub struct Model {
     pub status: TaskState,
 }
 
-#[derive(Debug, Clone, PartialEq, EnumIter, DeriveActiveEnum,Serialize,Deserialize)]
+#[derive(Default,Debug, Clone, PartialEq, EnumIter, DeriveActiveEnum,Serialize,Deserialize)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "taskstate")]
 pub enum TaskState{
     #[sea_orm(string_value = "C")]
     Completed,
     #[sea_orm(string_value = "P")]
+    #[default]
     Pending
 }
 
@@ -41,3 +44,14 @@ impl Related<super::User::Entity> for Entity {
 }
 
 impl ActiveModelBehavior for ActiveModel {}
+
+impl Model {
+    pub fn new(username: String, title: String, description: String) -> Self {
+        Self {
+            username,
+            title,
+            description,
+             ..Default::default()
+        }
+    }
+}

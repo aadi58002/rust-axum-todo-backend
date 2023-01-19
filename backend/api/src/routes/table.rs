@@ -3,7 +3,7 @@ use core::{
     table_actions::{clear::clear_table, drop::drop_table},
 };
 
-use axum::{
+use common::axum::{
     http::HeaderMap,
     response::IntoResponse,
     Extension,
@@ -12,7 +12,7 @@ use axum::{
 use crate::helper::{header_extract::header_extract, res_con::*};
 
 pub async fn table(
-    Extension(db_connection): Extension<core::sea_orm::DatabaseConnection>,
+    Extension(db_connection): Extension<common::sea_orm::DatabaseConnection>,
     header: HeaderMap,
 ) -> impl IntoResponse {
     let action = match header_extract("action", &header) {

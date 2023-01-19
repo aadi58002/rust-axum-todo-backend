@@ -1,5 +1,5 @@
 use dotenvy::dotenv;
-use sea_orm::{ConnectOptions, Database, DatabaseConnection};
+use common::sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use std::{time::Duration, env};
 
 

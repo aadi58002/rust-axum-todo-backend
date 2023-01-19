@@ -3,13 +3,16 @@ mod middleware;
 mod router;
 mod helper;
 
+use common::axum;
+use common::tokio;
 use router::rounter::create_route;
 use std::net::SocketAddr;
 use core::{get_connection,init_tables};
 
 pub async fn start_tracing() {
-    tracing_subscriber::fmt::init();
+    common::tracing_subscriber::fmt::init();
 }
+
 #[tokio::main]
 pub async fn run() {
     let db_connection = get_connection().await;
