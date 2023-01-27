@@ -53,8 +53,8 @@ pub async fn tasks(
             match action.as_str().clone() {
                 "add" => {
                     let description = match header_extract("description", &header) {
-                        Ok(val) => val,
-                        Err(e) => return e,
+                        Ok(val) => Some(val),
+                        Err(_) => None,
                     };
 
                     let new_task = core::Tasks::Model::new(username, title, description);
@@ -93,8 +93,8 @@ pub async fn tasks(
 
                             let changed_description =
                                 match header_extract("changed_desription", &header) {
-                                    Ok(val) => val,
-                                    Err(_) => task.description,
+                                    Ok(val) => Some(val),
+                                    Err(_) => None,
                                 };
 
                             let changed_status = match header_extract("changed_status", &header) {

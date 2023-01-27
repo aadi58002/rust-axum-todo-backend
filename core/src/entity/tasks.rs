@@ -11,7 +11,7 @@ pub struct Model {
     pub username: String,
     #[sea_orm(primary_key)]
     pub title: String,
-    pub description: String,
+    pub description: Option<String>,
     pub status: TaskState,
 }
 
@@ -46,7 +46,7 @@ impl Related<super::User::Entity> for Entity {
 impl ActiveModelBehavior for ActiveModel {}
 
 impl Model {
-    pub fn new(username: String, title: String, description: String) -> Self {
+    pub fn new(username: String, title: String, description: Option<String>) -> Self {
         Self {
             username,
             title,

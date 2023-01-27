@@ -45,10 +45,15 @@ pub async fn users(
             Ok(user_option) => match user_option {
                 Some(user) => {
                     if user.password != password {
-                        return res_unauth("Can't perform action due to user being not authenticated");
+                        return res_unauth(
+                            "Can't perform action due to user being not authenticated",
+                        );
                     }
                     match action.as_str().clone() {
-                        "login" => res_good("Successful login"),
+                        "login" => match serde_json::to_string(&user) {
+                            Ok(json) => res_good(&json),
+                            Err(_) => res_bad("Unable to convert user from database to Json"),
+                        },
                         "delete" => {
                             match delete_enitity(&db_connection, user.into_active_model()).await {
                                 Ok(_) => res_good("User successfully deleted"),
