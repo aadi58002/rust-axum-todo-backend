@@ -1,5 +1,4 @@
 mod routes;
-mod middleware;
 mod router;
 mod helper;
 
