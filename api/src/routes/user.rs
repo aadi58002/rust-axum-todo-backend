@@ -66,10 +66,15 @@ pub async fn users(
                                 Ok(val) => val,
                                 Err(e) => return e,
                             };
+                            let changed_email = match header_extract("changed_email", &header)
+                            {
+                                Ok(val) => val,
+                                Err(e) => user.email,
+                            };
                             let active_user = core::User::ActiveModel {
                                 id: Set(user.id),
                                 password: Set(changed_password),
-                                email: Set(user.email),
+                                email: Set(changed_email),
                                 username: Set(user.username),
                             };
                             match update_entity(&db_connection, active_user).await {

@@ -1,0 +1,94 @@
+#+title: Rust Todo Backend
+#+description: A Rust backend written for a todo app which can perform basic CRUD operation with postgres database
+#+author: Aditya Yadav
+
+* Technologies Used
+- [[https://github.com/SeaQL/sea-orm/][Sea Orm]]
+- [[https://github.com/tokio-rs/axum][Axum]]
+- [[https://github.com/tokio-rs/tokio][Tokio]]
+- [[https://github.com/serde-rs/serde][Serde]]
+- [[https://www.rust-lang.org/][Rust Programming Language]]
+
+* Getting Started 
+** Database
+Credits to [[https://github.com/khezen/compose-postgres][GitHub - khezen/compose-postgres: Postgresql & pgadmin4 powered by compose]] for providing the docker-compose to setup pgadmin and postgres.
+To start the postgres database and the pgadmin utility
+#+begin_src bash
+podman-compose up -d
+#+end_src
+The above command will automatically download the relevent image and start the database on port 5432 and the pgadmin ui on the port 5050.
+To use pgadmin effectively refer :-
+[[https://medium.com/@malexmad/how-to-use-pgadmin-a9addc7ff46c][How to use pgAdmin. A brief overview & tutorial to connect]]
+[[https://www.pgadmin.org/screenshots/#9][Some pgadmin Screenshots]]
+*** Infomation required to use pg admin
+|------------------------+------------------------+------------------------------|
+| Name                   | Value (Case sensitive) | Docker-compose Variable Name |
+|------------------------+------------------------+------------------------------|
+| Master password        | root                   | PGADMIN_DEFAULT_PASSWORD       |
+| Register Server:- Name | <Anything you want>    |                              |
+| Host Name/address      | postgres               |                              |
+| Username               | root                   | POSTGRES_USER                 |
+| Password               | root                   | POSTGRES_PASSWORD             |
+|------------------------+------------------------+------------------------------|
+*** Scheme for database
+***** User
+|----------+--------+----------------------------+-----------------|
+| Name     | Type   | Attribute                  | Relation        |
+|----------+--------+----------------------------+-----------------|
+| id       | i32    | Auto increment,Primary key |                 |
+| username | String | required,unique            | Tasks(username) |
+| email    | String | required                   |                 |
+| password | String | required                   |                 |
+|----------+--------+----------------------------+-----------------|
+***** Tasks
+|-------------+-----------------+------------------------------------+---------------------------|
+| Name        | Type            | Attribute                          | Relation                  |
+|-------------+-----------------+------------------------------------+---------------------------|
+| id          | i32             | Auto increment,Primary key         |                           |
+| username    | String          | required                           | Taken from User(username) |
+| title       | String          | required,Primary key               |                           |
+| description | String          | Optional                           |                           |
+| status      | Either C or P   | Optional -> Default to P (Pending) |                           |
+|             | (C = Completed) |                                    |                           |
+|             | (P = Pending)   |                                    |                           |
+|-------------+-----------------+------------------------------------+---------------------------|
+** Axum api server
+[[https://www.rust-lang.org/learn/get-started][Getting started - Rust Programming Language]] 
+To start the axum server just install rust with above link.
+Then just run =cargo run= to start the server.
+The api will start running at 
+* Api End points
+** Test Route for server status
+|-------+-------------------------+--------------------------------------------------------------------|
+| Route | Header (case sensitive) | Function                                                           |
+|-------+-------------------------+--------------------------------------------------------------------|
+| /     | -                       | It is just to see if the serrver is online and working as intended |
+|-------+-------------------------+--------------------------------------------------------------------|
+** Table actions
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------|
+| Route  | Header (case sensitive)                                                                                                                                    | Function                                                                                               |
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------|
+| /table | action = init                                                                                                                                              | It will create the User and Tasks table in the database if not already there                           |
+| /table | action = drop                                                                                                                                              | It will drop the User and Tasks tables along with there data                                           |
+| /table | action = clear                                                                                                                                             | It will clear the Data from the table but will leave the tables in the database(In sql terms TRUNCATE) |
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------|
+** Users actions
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------|
+| Route  | Header (case sensitive)                                                                                                                                    | Function                                                                                               |
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------|
+| /users | action = register, username = <anything>, password = <anything>, email = <anything>                                                                        | It is used to register a new user                                                                      |
+| /users | action = login   , username = <anything>, password = <anything>                                                                                            | It is used to check if a username has the correct password for the provided user name                  |
+| /users | action = delete  , username = <anything>, password = <anything>                                                                                            | It is used to delete a registerd user                                                                  |
+| /users | action = update  , username = <anything>, password = <anything>, changed_email = <if want to change>, changed_password = <Changed password>                  | It is used to update the user credentials on the database (changed_password and changed_email)           |
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------|
+
+** Tasks actions
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------|
+| Route  | Header (case sensitive)                                                                                                                                    | Function                                                                                       |
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------|
+| /tasks | action = get     , username = <anything>, password = <anything>                                                                                            | It will get all the tasks for the provided user                                                |
+| /tasks | action = add     , username = <anything>, password = <anything>, title = <anything>, description = <if you want to have a description>                     | It will add a new task for the provided user                                                   |
+| /tasks | action = delete  , username = <anything>, password = <anything>, title = <anything>                                                                        | It will delete task with the provided title for the provided user                              |
+| /tasks | action = update  , username = <anything>, password = <anything>, title = <anything>                                                                        | It will update the field which are available in the changed fields tasks for the provided user |
+|        | changed_title =    <if want to change>, changed_description = <if want to change>, changed_status = <if want to change>(Should be string of value "P" or "C") |                                                                                                |
+|--------+------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------|
