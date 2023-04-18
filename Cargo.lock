@@ -51,8 +51,6 @@ dependencies = [
  "core",
  "lazy_static",
  "regex",
- "serde",
- "serde_json",
  "tower-http",
 ]
 
@@ -347,8 +345,6 @@ dependencies = [
  "common",
  "dotenvy",
  "log",
- "serde",
- "serde_json",
 ]
 
 [[package]]

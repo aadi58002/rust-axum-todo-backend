@@ -1,8 +1,9 @@
 use common::sea_orm;
 use common::sea_orm::entity::prelude::*;
-use common::serde::{Serialize, Deserialize};
+use common::serde::{self,Serialize, Deserialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
+#[serde(crate = "self::serde")]
 #[sea_orm(table_name = "Users")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment)]

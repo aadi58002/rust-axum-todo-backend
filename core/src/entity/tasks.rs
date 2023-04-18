@@ -1,8 +1,9 @@
 use common::sea_orm as sea_orm;
 use common::sea_orm::entity::prelude::*;
-use common::serde::{Serialize, Deserialize};
+use common::serde::{self,Serialize, Deserialize};
 
 #[derive(Clone,Default, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
+#[serde(crate = "self::serde")]
 #[sea_orm(table_name = "Tasks")]
 pub struct Model {
     #[sea_orm(primary_key,auto_increment)]
@@ -16,6 +17,7 @@ pub struct Model {
 }
 
 #[derive(Default,Debug, Clone, PartialEq, EnumIter, DeriveActiveEnum,Serialize,Deserialize)]
+#[serde(crate = "self::serde")]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "taskstate")]
 pub enum TaskState{
     #[sea_orm(string_value = "C")]

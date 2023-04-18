@@ -3,6 +3,7 @@ use crate::helper::{
     res_con::{res_bad, res_db_fail, res_good, res_unauth},
 };
 use common::axum::{http::HeaderMap, response::IntoResponse, Extension};
+use common::serde_json;
 use common::sea_orm::{entity::*, IntoActiveModel};
 use core::entity_actions::{
     deletion::delete_enitity, get::get_user, insert::insert_entity, update::update_entity,
@@ -69,7 +70,7 @@ pub async fn users(
                             let changed_email = match header_extract("changed_email", &header)
                             {
                                 Ok(val) => val,
-                                Err(e) => user.email,
+                                Err(_) => user.email,
                             };
                             let active_user = core::User::ActiveModel {
                                 id: Set(user.id),
