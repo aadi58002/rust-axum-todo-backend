@@ -18,7 +18,7 @@ pub async fn run() {
 
     match init_tables(&db_connection).await{
         Ok(_) => println!("Init tables : Creation complete"),
-        Err(e) => println!("Failed due to : {}", e.to_string()),
+        Err(e) => println!("Failed due to : {}", e),
     }
 
     let app = create_route(db_connection);

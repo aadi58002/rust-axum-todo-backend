@@ -44,7 +44,7 @@ pub async fn tasks(
                 Ok(json) => res_good(&json),
                 Err(_) => res_bad("Unable to convert the values coming from database to json"),
             },
-            Err(e) => return res_db_fail(e),
+            Err(e) => res_db_fail(e),
         },
         "add" | "delete" | "update" => {
             let title = match header_extract("title", &header) {
@@ -77,12 +77,12 @@ pub async fn tasks(
                         )
                         .await
                         {
-                            Ok(_) => return res_good("Task successful deleted"),
-                            Err(e) => return res_db_fail(e),
+                            Ok(_) => res_good("Task successful deleted"),
+                            Err(e) => res_db_fail(e),
                         },
-                        None => return res_bad("There is no task with the provided title"),
+                        None => res_bad("There is no task with the provided title"),
                     },
-                    Err(e) => return res_db_fail(e),
+                    Err(e) => res_db_fail(e),
                 },
                 "update" => match get_task(&db_connection, user, title).await {
                     Ok(maybe_task) => match maybe_task {
@@ -119,13 +119,13 @@ pub async fn tasks(
                             )
                             .await
                             {
-                                Ok(_) => return res_good("Task successful updated"),
-                                Err(e) => return res_db_fail(e),
+                                Ok(_) => res_good("Task successful updated"),
+                                Err(e) => res_db_fail(e),
                             }
                         }
-                        None => return res_bad("There is no task with the provided title"),
+                        None => res_bad("There is no task with the provided title"),
                     },
-                    Err(e) => return res_db_fail(e),
+                    Err(e) => res_db_fail(e),
                 },
                 _ => unreachable!(),
             }

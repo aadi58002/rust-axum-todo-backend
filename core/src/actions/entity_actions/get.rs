@@ -3,10 +3,10 @@ use common::sea_orm::{ColumnTrait, EntityTrait, ModelTrait, QueryFilter};
 
 pub async fn get_user(
     db_connection: &common::sea_orm::DatabaseConnection,
-    username: &String,
+    username: &str,
 ) -> Result<Option<User::Model>, String> {
     match User::Entity::find()
-        .filter(User::Column::Username.contains(&username))
+        .filter(User::Column::Username.contains(username))
         .one(db_connection)
         .await
     {

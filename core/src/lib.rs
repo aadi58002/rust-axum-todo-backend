@@ -3,7 +3,7 @@ mod entity;
 mod actions;
 
 use actions::table_actions::creation::{create_table, create_type};
-pub use connections::connections::*;
+pub use connections::*;
 pub use entity::*;
 pub use actions::*;
 
