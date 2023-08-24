@@ -2,15 +2,15 @@ use crate::helper::{
     header_extract::*,
     res_con::{res_bad, res_db_fail, res_good},
 };
-use common::axum::{http::HeaderMap, response::IntoResponse, Extension};
-use common::serde_json;
-use common::sea_orm::{entity::*, IntoActiveModel};
-use core::entity_actions::{
+use axum::{http::HeaderMap, response::IntoResponse, Extension};
+use serde_json;
+use sea_orm::{entity::*, IntoActiveModel};
+use database::entity_actions::{
     deletion::delete_enitity, get::*, insert::insert_entity, update::update_entity,
 };
 
-pub async fn tasks(
-    Extension(db_connection): Extension<common::sea_orm::DatabaseConnection>,
+pub async fn task(
+    Extension(db_connection): Extension<sea_orm::DatabaseConnection>,
     header: HeaderMap,
 ) -> impl IntoResponse {
     let action = match header_extract("action", &header) {
@@ -58,8 +58,8 @@ pub async fn tasks(
                         Err(_) => None,
                     };
 
-                    let new_task = core::Tasks::Model::new(username, title, description);
-                    match insert_entity::<core::Tasks::ActiveModel>(
+                    let new_task = database::Task::Model::new(username, title, description);
+                    match insert_entity::<database::Task::ActiveModel>(
                         &db_connection,
                         new_task.into_active_model(),
                     )
@@ -71,7 +71,7 @@ pub async fn tasks(
                 }
                 "delete" => match get_task(&db_connection, user, title).await {
                     Ok(maybe_task) => match maybe_task {
-                        Some(task) => match delete_enitity::<core::Tasks::ActiveModel>(
+                        Some(task) => match delete_enitity::<database::Task::ActiveModel>(
                             &db_connection,
                             task.into_active_model(),
                         )
@@ -100,20 +100,20 @@ pub async fn tasks(
 
                             let changed_status = match header_extract("changed_status", &header) {
                                 Ok(val) => match val.as_str() {
-                                    "Pending" => core::Tasks::TaskState::Pending,
-                                    "Completed" => core::Tasks::TaskState::Completed,
+                                    "Pending" => database::Task::TaskState::Pending,
+                                    "Completed" => database::Task::TaskState::Completed,
                                     _ => unreachable!(),
                                 },
                                 Err(_) => task.status,
                             };
-                            let active_task = core::Tasks::ActiveModel {
+                            let active_task = database::Task::ActiveModel {
                                 id: Set(task.id),
                                 username: Set(task.username),
                                 title: Set(changed_title),
                                 description: Set(changed_description),
                                 status: Set(changed_status),
                             };
-                            match update_entity::<core::Tasks::ActiveModel>(
+                            match update_entity::<database::Task::ActiveModel>(
                                 &db_connection,
                                 active_task,
                             )

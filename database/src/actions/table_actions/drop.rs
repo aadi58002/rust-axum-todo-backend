@@ -1,7 +1,7 @@
-use common::sea_orm::{ActiveEnum, ConnectionTrait, DbErr, EntityTrait, ExecResult, Statement};
+use sea_orm::{ActiveEnum, ConnectionTrait, DbErr, EntityTrait, ExecResult, Statement};
 
 pub async fn drop_table<E: EntityTrait>(
-    db_connection: &common::sea_orm::DatabaseConnection,
+    db_connection: &sea_orm::DatabaseConnection,
     entity: E,
 ) -> Result<ExecResult, DbErr> {
     db_connection
@@ -14,7 +14,7 @@ pub async fn drop_table<E: EntityTrait>(
 }
 
 pub async fn drop_type<E: ActiveEnum>(
-    db_connection: &common::sea_orm::DatabaseConnection,
+    db_connection: &sea_orm::DatabaseConnection,
 ) -> Result<ExecResult, DbErr> {
     db_connection
         .execute(Statement::from_sql_and_values(

@@ -1,11 +1,12 @@
 [package]
-name = "core"
+name = "database"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde = { workspace = true }
+sea-orm = { workspace = true }
 dotenvy = "0.15.6"
 log = "0.4.17"
-common = { path = "../common" }

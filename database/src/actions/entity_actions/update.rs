@@ -1,13 +1,13 @@
-use common::sea_orm::entity::*;
+use sea_orm::entity::*;
 
 pub async fn update_entity<E>(
-    db_connection: &common::sea_orm::DatabaseConnection,
+    db_connection: &sea_orm::DatabaseConnection,
     entity: E,
 ) -> Result<<<E as ActiveModelTrait>::Entity as EntityTrait>::Model, String>
 where
     E: ActiveModelBehavior + std::marker::Send,
-    <<E as common::sea_orm::ActiveModelTrait>::Entity as common::sea_orm::EntityTrait>::Model:
-        common::sea_orm::IntoActiveModel<E>,
+    <<E as sea_orm::ActiveModelTrait>::Entity as sea_orm::EntityTrait>::Model:
+        sea_orm::IntoActiveModel<E>,
 {
     println!("{:?}",entity);
     match entity.update(db_connection).await {

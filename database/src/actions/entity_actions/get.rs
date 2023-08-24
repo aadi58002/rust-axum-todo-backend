@@ -1,8 +1,8 @@
 use crate::entity::*;
-use common::sea_orm::{ColumnTrait, EntityTrait, ModelTrait, QueryFilter};
+use sea_orm::{ColumnTrait, EntityTrait, ModelTrait, QueryFilter};
 
 pub async fn get_user(
-    db_connection: &common::sea_orm::DatabaseConnection,
+    db_connection: &sea_orm::DatabaseConnection,
     username: &str,
 ) -> Result<Option<User::Model>, String> {
     match User::Entity::find()
@@ -16,11 +16,11 @@ pub async fn get_user(
 }
 
 pub async fn get_all_tasks(
-    db_connection: &common::sea_orm::DatabaseConnection,
+    db_connection: &sea_orm::DatabaseConnection,
     user: User::Model,
-) -> Result<Vec<Tasks::Model>, String> {
+) -> Result<Vec<Task::Model>, String> {
     match user
-        .find_related(Tasks::Entity)
+        .find_related(Task::Entity)
         .all(db_connection)
         .await
     {
@@ -30,12 +30,12 @@ pub async fn get_all_tasks(
 }
 
 pub async fn get_task(
-    db_connection: &common::sea_orm::DatabaseConnection,
+    db_connection: &sea_orm::DatabaseConnection,
     user: User::Model,
     title: String,
-) -> Result<Option<Tasks::Model>, String> {
+) -> Result<Option<Task::Model>, String> {
     match user
-        .find_related(Tasks::Entity).filter(Tasks::Column::Title.contains(&title))
+        .find_related(Task::Entity).filter(Task::Column::Title.contains(&title))
         .one(db_connection)
         .await
     {

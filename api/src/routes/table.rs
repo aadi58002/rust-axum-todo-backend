@@ -1,9 +1,9 @@
-use core::{
+use database::{
     init_tables,
     table_actions::{clear::clear_table, drop::{drop_table, drop_type}},
 };
 
-use common::axum::{
+use axum::{
     http::HeaderMap,
     response::IntoResponse,
     Extension,
@@ -12,7 +12,7 @@ use common::axum::{
 use crate::helper::{header_extract::header_extract, res_con::*};
 
 pub async fn table(
-    Extension(db_connection): Extension<common::sea_orm::DatabaseConnection>,
+    Extension(db_connection): Extension<sea_orm::DatabaseConnection>,
 
     header: HeaderMap,
 ) -> impl IntoResponse {
@@ -22,10 +22,10 @@ pub async fn table(
     };
     match action.as_str() {
         "clear" => {
-            if let Err(e) = clear_table(&db_connection, core::Tasks::Entity).await{
+            if let Err(e) = clear_table(&db_connection, database::Task::Entity).await{
                 return res_bad(&format!("Unable to clear table Tasks : {}",e));
             }
-            if let Err(e) = clear_table(&db_connection, core::User::Entity).await{
+            if let Err(e) = clear_table(&db_connection, database::User::Entity).await{
                 return res_bad(&format!("Unable to clear table User : {}",e));
             }
             res_good("Tables Cleared")
@@ -35,13 +35,13 @@ pub async fn table(
             Err(e) => res_db_fail(e.to_string()),
         },
         "drop" => {
-            if let Err(e) = drop_table(&db_connection, core::Tasks::Entity).await{
+            if let Err(e) = drop_table(&db_connection, database::Task::Entity).await{
                 return res_bad(&format!("Unable to drop table Tasks : {}",e));
             }
-            if let Err(e) = drop_type::<core::Tasks::TaskState>(&db_connection).await{
+            if let Err(e) = drop_type::<database::Task::TaskState>(&db_connection).await{
                 return res_bad(&format!("Unable to drop type TaskState : {}",e));
             }
-            if let Err(e) = drop_table(&db_connection, core::User::Entity).await{
+            if let Err(e) = drop_table(&db_connection, database::User::Entity).await{
                 return res_bad(&format!("Unable to drop table User : {}",e));
             }
             res_good("Tables Droped")

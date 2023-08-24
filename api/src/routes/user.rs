@@ -2,15 +2,15 @@ use crate::helper::{
     header_extract::*,
     res_con::{res_bad, res_db_fail, res_good, res_unauth},
 };
-use common::axum::{http::HeaderMap, response::IntoResponse, Extension};
-use common::serde_json;
-use common::sea_orm::{entity::*, IntoActiveModel};
-use core::entity_actions::{
+use axum::{http::HeaderMap, response::IntoResponse, Extension};
+use serde_json;
+use sea_orm::{entity::*, IntoActiveModel};
+use database::entity_actions::{
     deletion::delete_enitity, get::get_user, insert::insert_entity, update::update_entity,
 };
 
-pub async fn users(
-    Extension(db_connection): Extension<common::sea_orm::DatabaseConnection>,
+pub async fn user(
+    Extension(db_connection): Extension<sea_orm::DatabaseConnection>,
     header: HeaderMap,
 ) -> impl IntoResponse {
     let username = match header_extract("username", &header) {
@@ -31,8 +31,8 @@ pub async fn users(
                 Ok(val) => val,
                 Err(e) => return e,
             };
-            let user = core::User::Model::new(username, email, password);
-            match insert_entity::<core::user::ActiveModel>(&db_connection, user.into_active_model())
+            let user = database::User::Model::new(username, email, password);
+            match insert_entity::<database::user::ActiveModel>(&db_connection, user.into_active_model())
                 .await
             {
                 Ok(user) => match serde_json::to_string(&user) {
@@ -72,7 +72,7 @@ pub async fn users(
                                 Ok(val) => val,
                                 Err(_) => user.email,
                             };
-                            let active_user = core::User::ActiveModel {
+                            let active_user = database::User::ActiveModel {
                                 id: Set(user.id),
                                 password: Set(changed_password),
                                 email: Set(changed_email),

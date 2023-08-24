@@ -1,6 +1,6 @@
-use common::sea_orm as sea_orm;
-use common::sea_orm::entity::prelude::*;
-use common::serde::{self,Serialize, Deserialize};
+use sea_orm as sea_orm;
+use sea_orm::entity::prelude::*;
+use serde::{self,Serialize, Deserialize};
 
 #[derive(Clone,Default, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
 #[serde(crate = "self::serde")]

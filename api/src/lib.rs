@@ -2,14 +2,14 @@ mod router;
 mod routes;
 mod helper;
 
-use common::axum;
-use common::tokio;
+use axum;
+use tokio;
 use router::rounter::create_route;
 use std::net::SocketAddr;
-use core::{get_connection,init_tables};
+use database::{get_connection,init_tables};
 
 pub async fn start_tracing() {
-    common::tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt::init();
 }
 
 #[tokio::main]

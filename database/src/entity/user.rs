@@ -1,6 +1,6 @@
-use common::sea_orm;
-use common::sea_orm::entity::prelude::*;
-use common::serde::{self,Serialize, Deserialize};
+use sea_orm;
+use sea_orm::entity::prelude::*;
+use serde::{self,Serialize, Deserialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
 #[serde(crate = "self::serde")]
@@ -18,11 +18,11 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::Tasks::Entity")]
+    #[sea_orm(has_many = "super::Task::Entity")]
     Task,
 }
 
-impl Related<super::Tasks::Entity> for Entity {
+impl Related<super::Task::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Task.def()
     }
