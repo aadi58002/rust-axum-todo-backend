@@ -3,11 +3,11 @@ use crate::helper::{
     res_con::{res_bad, res_db_fail, res_good},
 };
 use axum::{http::HeaderMap, response::IntoResponse, Extension};
-use serde_json;
-use sea_orm::{entity::*, IntoActiveModel};
 use database::entity_actions::{
     deletion::delete_enitity, get::*, insert::insert_entity, update::update_entity,
 };
+use sea_orm::{entity::*, IntoActiveModel};
+use serde_json;
 
 pub async fn task(
     Extension(db_connection): Extension<sea_orm::DatabaseConnection>,
@@ -30,7 +30,7 @@ pub async fn task(
     let user = match get_user(&db_connection, &username).await {
         Ok(maybe_user) => match maybe_user {
             Some(user) => user,
-            None => return res_bad(&format!("No user with the username {}", username)),
+            None => return res_bad(&format!("No user with the username {username}")),
         },
         Err(e) => return res_db_fail(e),
     };
@@ -51,7 +51,7 @@ pub async fn task(
                 Ok(val) => val,
                 Err(e) => return e,
             };
-            match action.as_str().clone() {
+            match action.as_str() {
                 "add" => {
                     let description = match header_extract("description", &header) {
                         Ok(val) => Some(val),
@@ -66,7 +66,7 @@ pub async fn task(
                     .await
                     {
                         Ok(_) => res_good("New task created"),
-                        Err(e) => res_bad(&format!("Unable to create the task : {}", e)),
+                        Err(e) => res_bad(&format!("Unable to create the task : {e}")),
                     }
                 }
                 "delete" => match get_task(&db_connection, user, title).await {

@@ -1,13 +1,13 @@
-use sea_orm as sea_orm;
+use sea_orm;
 use sea_orm::entity::prelude::*;
-use serde::{self,Serialize, Deserialize};
+use serde::{self, Deserialize, Serialize};
 
-#[derive(Clone,Default, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
+#[derive(Clone, Default, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "self::serde")]
 #[sea_orm(table_name = "Tasks")]
 pub struct Model {
-    #[sea_orm(primary_key,auto_increment)]
-    #[serde(skip_serializing,skip_deserializing)]
+    #[sea_orm(primary_key, auto_increment)]
+    #[serde(skip_serializing, skip_deserializing)]
     pub id: i32,
     pub username: String,
     #[sea_orm(primary_key)]
@@ -16,15 +16,15 @@ pub struct Model {
     pub status: TaskState,
 }
 
-#[derive(Default,Debug, Clone, PartialEq, EnumIter, DeriveActiveEnum,Serialize,Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
 #[serde(crate = "self::serde")]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "taskstate")]
-pub enum TaskState{
+pub enum TaskState {
     #[sea_orm(string_value = "C")]
     Completed,
     #[sea_orm(string_value = "P")]
     #[default]
-    Pending
+    Pending,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -53,7 +53,7 @@ impl Model {
             username,
             title,
             description,
-             ..Default::default()
+            ..Default::default()
         }
     }
 }

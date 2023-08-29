@@ -9,7 +9,7 @@ where
     <<E as sea_orm::ActiveModelTrait>::Entity as sea_orm::EntityTrait>::Model:
         sea_orm::IntoActiveModel<E>,
 {
-    println!("{:?}",entity);
+    println!("{entity:?}");
     match entity.insert(db_connection).await {
         Ok(val) => Ok(val),
         Err(e) => Err(e.to_string()),

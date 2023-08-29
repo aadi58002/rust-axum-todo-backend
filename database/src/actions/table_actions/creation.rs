@@ -11,7 +11,9 @@ pub async fn create_table<E: EntityTrait>(
         .await
 }
 
-pub async fn create_type<E: ActiveEnum>(db_connection: &sea_orm::DatabaseConnection) -> Result<ExecResult, DbErr>{
+pub async fn create_type<E: ActiveEnum>(
+    db_connection: &sea_orm::DatabaseConnection,
+) -> Result<ExecResult, DbErr> {
     let backend = db_connection.get_database_backend();
     let schema = Schema::new(backend);
     db_connection

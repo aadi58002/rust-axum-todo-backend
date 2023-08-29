@@ -19,11 +19,7 @@ pub async fn get_all_tasks(
     db_connection: &sea_orm::DatabaseConnection,
     user: User::Model,
 ) -> Result<Vec<Task::Model>, String> {
-    match user
-        .find_related(Task::Entity)
-        .all(db_connection)
-        .await
-    {
+    match user.find_related(Task::Entity).all(db_connection).await {
         Ok(tasks) => Ok(tasks),
         Err(e) => Err(e.to_string()),
     }
@@ -35,7 +31,8 @@ pub async fn get_task(
     title: String,
 ) -> Result<Option<Task::Model>, String> {
     match user
-        .find_related(Task::Entity).filter(Task::Column::Title.contains(&title))
+        .find_related(Task::Entity)
+        .filter(Task::Column::Title.contains(&title))
         .one(db_connection)
         .await
     {

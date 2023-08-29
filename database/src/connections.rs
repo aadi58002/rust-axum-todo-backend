@@ -1,7 +1,6 @@
 use dotenvy::dotenv;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
-use std::{time::Duration, env};
-
+use std::{env, time::Duration};
 
 pub async fn get_connection() -> DatabaseConnection {
     dotenv().ok();

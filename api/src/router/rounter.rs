@@ -1,4 +1,4 @@
-use crate::routes::{server_working::server_working, user::user, table::table, task::task};
+use crate::routes::{server_working::server_working, table::table, task::task, user::user};
 
 use axum::{routing::get, Extension, Router};
 use tower_http::cors::CorsLayer;

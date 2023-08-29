@@ -14,7 +14,7 @@ pub fn res_good(message: &str) -> Response {
 pub fn res_db_fail(message: String) -> Response {
     (
         StatusCode::FAILED_DEPENDENCY,
-        format!("Unable to connect to database due to : {}", message).to_string(),
+        format!("Unable to connect to database due to : {message}"),
     )
         .into_response()
 }

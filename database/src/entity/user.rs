@@ -1,13 +1,13 @@
 use sea_orm;
 use sea_orm::entity::prelude::*;
-use serde::{self,Serialize, Deserialize};
+use serde::{self, Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel,Serialize,Deserialize)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
 #[serde(crate = "self::serde")]
 #[sea_orm(table_name = "Users")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment)]
-    #[serde(skip_serializing,skip_deserializing)]
+    #[serde(skip_serializing, skip_deserializing)]
     pub id: i32,
     #[sea_orm(unique)]
     pub username: String,

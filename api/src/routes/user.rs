@@ -3,11 +3,11 @@ use crate::helper::{
     res_con::{res_bad, res_db_fail, res_good, res_unauth},
 };
 use axum::{http::HeaderMap, response::IntoResponse, Extension};
-use serde_json;
-use sea_orm::{entity::*, IntoActiveModel};
 use database::entity_actions::{
     deletion::delete_enitity, get::get_user, insert::insert_entity, update::update_entity,
 };
+use sea_orm::{entity::*, IntoActiveModel};
+use serde_json;
 
 pub async fn user(
     Extension(db_connection): Extension<sea_orm::DatabaseConnection>,
@@ -32,8 +32,11 @@ pub async fn user(
                 Err(e) => return e,
             };
             let user = database::User::Model::new(username, email, password);
-            match insert_entity::<database::user::ActiveModel>(&db_connection, user.into_active_model())
-                .await
+            match insert_entity::<database::user::ActiveModel>(
+                &db_connection,
+                user.into_active_model(),
+            )
+            .await
             {
                 Ok(user) => match serde_json::to_string(&user) {
                     Ok(json) => res_good(&json),
@@ -50,7 +53,7 @@ pub async fn user(
                             "Can't perform action due to user being not authenticated",
                         );
                     }
-                    match action.as_str().clone() {
+                    match action.as_str() {
                         "login" => match serde_json::to_string(&user) {
                             Ok(json) => res_good(&json),
                             Err(_) => res_bad("Unable to convert user from database to Json"),
@@ -67,8 +70,7 @@ pub async fn user(
                                 Ok(val) => val,
                                 Err(e) => return e,
                             };
-                            let changed_email = match header_extract("changed_email", &header)
-                            {
+                            let changed_email = match header_extract("changed_email", &header) {
                                 Ok(val) => val,
                                 Err(_) => user.email,
                             };
@@ -86,7 +88,7 @@ pub async fn user(
                         _ => unreachable!(),
                     }
                 }
-                None => res_bad(&format!("No user with username '{}' was found", username)),
+                None => res_bad(&format!("No user with username '{username}' was found")),
             },
             Err(e) => res_db_fail(e),
         },
